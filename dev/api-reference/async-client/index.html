@@ -2803,26 +2803,7 @@ database already stores other sessions.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>neonize/aioze/client.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3781">3781</a></span>
-<span class="normal"><a href="#__codelineno-0-3782">3782</a></span>
-<span class="normal"><a href="#__codelineno-0-3783">3783</a></span>
-<span class="normal"><a href="#__codelineno-0-3784">3784</a></span>
-<span class="normal"><a href="#__codelineno-0-3785">3785</a></span>
-<span class="normal"><a href="#__codelineno-0-3786">3786</a></span>
-<span class="normal"><a href="#__codelineno-0-3787">3787</a></span>
-<span class="normal"><a href="#__codelineno-0-3788">3788</a></span>
-<span class="normal"><a href="#__codelineno-0-3789">3789</a></span>
-<span class="normal"><a href="#__codelineno-0-3790">3790</a></span>
-<span class="normal"><a href="#__codelineno-0-3791">3791</a></span>
-<span class="normal"><a href="#__codelineno-0-3792">3792</a></span>
-<span class="normal"><a href="#__codelineno-0-3793">3793</a></span>
-<span class="normal"><a href="#__codelineno-0-3794">3794</a></span>
-<span class="normal"><a href="#__codelineno-0-3795">3795</a></span>
-<span class="normal"><a href="#__codelineno-0-3796">3796</a></span>
-<span class="normal"><a href="#__codelineno-0-3797">3797</a></span>
-<span class="normal"><a href="#__codelineno-0-3798">3798</a></span>
-<span class="normal"><a href="#__codelineno-0-3799">3799</a></span>
-<span class="normal"><a href="#__codelineno-0-3800">3800</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3800">3800</a></span>
 <span class="normal"><a href="#__codelineno-0-3801">3801</a></span>
 <span class="normal"><a href="#__codelineno-0-3802">3802</a></span>
 <span class="normal"><a href="#__codelineno-0-3803">3803</a></span>
@@ -2897,101 +2878,120 @@ database already stores other sessions.</p>
 <span class="normal"><a href="#__codelineno-0-3872">3872</a></span>
 <span class="normal"><a href="#__codelineno-0-3873">3873</a></span>
 <span class="normal"><a href="#__codelineno-0-3874">3874</a></span>
-<span class="normal"><a href="#__codelineno-0-3875">3875</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3781"><a id="__codelineno-0-3781" name="__codelineno-0-3781"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span>
-</span><span id="__span-0-3782"><a id="__codelineno-0-3782" name="__codelineno-0-3782"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">proxy_settings</span><span class="p">:</span> <span class="n">ProxySettings</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-3783"><a id="__codelineno-0-3783" name="__codelineno-0-3783"></a><span class="p">):</span>
-</span><span id="__span-0-3784"><a id="__codelineno-0-3784" name="__codelineno-0-3784"></a><span class="w">    </span><span class="sd">"""Establishes a connection to the WhatsApp servers.</span>
-</span><span id="__span-0-3785"><a id="__codelineno-0-3785" name="__codelineno-0-3785"></a>
-</span><span id="__span-0-3786"><a id="__codelineno-0-3786" name="__codelineno-0-3786"></a><span class="sd">    :param payload: Optional payload. Get from PairPhone() #cr: Pah-0/neonize</span>
-</span><span id="__span-0-3787"><a id="__codelineno-0-3787" name="__codelineno-0-3787"></a><span class="sd">    :type payload:bytes | None</span>
-</span><span id="__span-0-3788"><a id="__codelineno-0-3788" name="__codelineno-0-3788"></a><span class="sd">    :param proxy_settings: Optional proxy configuration. Pass ``None`` to connect without a proxy.</span>
-</span><span id="__span-0-3789"><a id="__codelineno-0-3789" name="__codelineno-0-3789"></a><span class="sd">    :type proxy_settings: ProxySettings | None</span>
-</span><span id="__span-0-3790"><a id="__codelineno-0-3790" name="__codelineno-0-3790"></a><span class="sd">    :raises NeonizeError: If connection setup fails.</span>
-</span><span id="__span-0-3791"><a id="__codelineno-0-3791" name="__codelineno-0-3791"></a><span class="sd">    """</span>
-</span><span id="__span-0-3792"><a id="__codelineno-0-3792" name="__codelineno-0-3792"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">..utils.ffmpeg</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_ffmpeg_available</span>
-</span><span id="__span-0-3793"><a id="__codelineno-0-3793" name="__codelineno-0-3793"></a>
-</span><span id="__span-0-3794"><a id="__codelineno-0-3794" name="__codelineno-0-3794"></a>    <span class="n">check_ffmpeg_available</span><span class="p">()</span>
-</span><span id="__span-0-3795"><a id="__codelineno-0-3795" name="__codelineno-0-3795"></a>
-</span><span id="__span-0-3796"><a id="__codelineno-0-3796" name="__codelineno-0-3796"></a>    <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span> <span class="ow">or</span> <span class="sa">b</span><span class="s2">""</span>
-</span><span id="__span-0-3797"><a id="__codelineno-0-3797" name="__codelineno-0-3797"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
-</span><span id="__span-0-3798"><a id="__codelineno-0-3798" name="__codelineno-0-3798"></a>    <span class="n">_events_module</span><span class="o">.</span><span class="n">set_event_loop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span>
-</span><span id="__span-0-3799"><a id="__codelineno-0-3799" name="__codelineno-0-3799"></a>    <span class="c1"># Convert the list of functions to a bytearray</span>
-</span><span id="__span-0-3800"><a id="__codelineno-0-3800" name="__codelineno-0-3800"></a>    <span class="n">d</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">list_func</span><span class="p">))</span>
-</span><span id="__span-0-3801"><a id="__codelineno-0-3801" name="__codelineno-0-3801"></a>    <span class="n">_log_</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"🔒 Attempting to connect to the WhatsApp servers."</span><span class="p">)</span>
-</span><span id="__span-0-3802"><a id="__codelineno-0-3802" name="__codelineno-0-3802"></a>    <span class="c1"># Set device properties</span>
-</span><span id="__span-0-3803"><a id="__codelineno-0-3803" name="__codelineno-0-3803"></a>    <span class="n">deviceprops</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-3804"><a id="__codelineno-0-3804" name="__codelineno-0-3804"></a>        <span class="n">DeviceProps</span><span class="p">(</span><span class="n">os</span><span class="o">=</span><span class="s2">"Neonize"</span><span class="p">,</span> <span class="n">platformType</span><span class="o">=</span><span class="n">DeviceProps</span><span class="o">.</span><span class="n">SAFARI</span><span class="p">)</span>
-</span><span id="__span-0-3805"><a id="__codelineno-0-3805" name="__codelineno-0-3805"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device_props</span> <span class="ow">is</span> <span class="kc">None</span>
-</span><span id="__span-0-3806"><a id="__codelineno-0-3806" name="__codelineno-0-3806"></a>        <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">device_props</span>
-</span><span id="__span-0-3807"><a id="__codelineno-0-3807" name="__codelineno-0-3807"></a>    <span class="p">)</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
-</span><span id="__span-0-3808"><a id="__codelineno-0-3808" name="__codelineno-0-3808"></a>
-</span><span id="__span-0-3809"><a id="__codelineno-0-3809" name="__codelineno-0-3809"></a>    <span class="n">jidbuf_size</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="__span-0-3810"><a id="__codelineno-0-3810" name="__codelineno-0-3810"></a>    <span class="n">jidbuf</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">""</span>
-</span><span id="__span-0-3811"><a id="__codelineno-0-3811" name="__codelineno-0-3811"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jid</span><span class="p">:</span>
-</span><span id="__span-0-3812"><a id="__codelineno-0-3812" name="__codelineno-0-3812"></a>        <span class="n">jidbuf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jid</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
-</span><span id="__span-0-3813"><a id="__codelineno-0-3813" name="__codelineno-0-3813"></a>        <span class="n">jidbuf_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">jidbuf</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-3875">3875</a></span>
+<span class="normal"><a href="#__codelineno-0-3876">3876</a></span>
+<span class="normal"><a href="#__codelineno-0-3877">3877</a></span>
+<span class="normal"><a href="#__codelineno-0-3878">3878</a></span>
+<span class="normal"><a href="#__codelineno-0-3879">3879</a></span>
+<span class="normal"><a href="#__codelineno-0-3880">3880</a></span>
+<span class="normal"><a href="#__codelineno-0-3881">3881</a></span>
+<span class="normal"><a href="#__codelineno-0-3882">3882</a></span>
+<span class="normal"><a href="#__codelineno-0-3883">3883</a></span>
+<span class="normal"><a href="#__codelineno-0-3884">3884</a></span>
+<span class="normal"><a href="#__codelineno-0-3885">3885</a></span>
+<span class="normal"><a href="#__codelineno-0-3886">3886</a></span>
+<span class="normal"><a href="#__codelineno-0-3887">3887</a></span>
+<span class="normal"><a href="#__codelineno-0-3888">3888</a></span>
+<span class="normal"><a href="#__codelineno-0-3889">3889</a></span>
+<span class="normal"><a href="#__codelineno-0-3890">3890</a></span>
+<span class="normal"><a href="#__codelineno-0-3891">3891</a></span>
+<span class="normal"><a href="#__codelineno-0-3892">3892</a></span>
+<span class="normal"><a href="#__codelineno-0-3893">3893</a></span>
+<span class="normal"><a href="#__codelineno-0-3894">3894</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3800"><a id="__codelineno-0-3800" name="__codelineno-0-3800"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span>
+</span><span id="__span-0-3801"><a id="__codelineno-0-3801" name="__codelineno-0-3801"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">proxy_settings</span><span class="p">:</span> <span class="n">ProxySettings</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-3802"><a id="__codelineno-0-3802" name="__codelineno-0-3802"></a><span class="p">):</span>
+</span><span id="__span-0-3803"><a id="__codelineno-0-3803" name="__codelineno-0-3803"></a><span class="w">    </span><span class="sd">"""Establishes a connection to the WhatsApp servers.</span>
+</span><span id="__span-0-3804"><a id="__codelineno-0-3804" name="__codelineno-0-3804"></a>
+</span><span id="__span-0-3805"><a id="__codelineno-0-3805" name="__codelineno-0-3805"></a><span class="sd">    :param payload: Optional payload. Get from PairPhone() #cr: Pah-0/neonize</span>
+</span><span id="__span-0-3806"><a id="__codelineno-0-3806" name="__codelineno-0-3806"></a><span class="sd">    :type payload:bytes | None</span>
+</span><span id="__span-0-3807"><a id="__codelineno-0-3807" name="__codelineno-0-3807"></a><span class="sd">    :param proxy_settings: Optional proxy configuration. Pass ``None`` to connect without a proxy.</span>
+</span><span id="__span-0-3808"><a id="__codelineno-0-3808" name="__codelineno-0-3808"></a><span class="sd">    :type proxy_settings: ProxySettings | None</span>
+</span><span id="__span-0-3809"><a id="__codelineno-0-3809" name="__codelineno-0-3809"></a><span class="sd">    :raises NeonizeError: If connection setup fails.</span>
+</span><span id="__span-0-3810"><a id="__codelineno-0-3810" name="__codelineno-0-3810"></a><span class="sd">    """</span>
+</span><span id="__span-0-3811"><a id="__codelineno-0-3811" name="__codelineno-0-3811"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">..utils.ffmpeg</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_ffmpeg_available</span>
+</span><span id="__span-0-3812"><a id="__codelineno-0-3812" name="__codelineno-0-3812"></a>
+</span><span id="__span-0-3813"><a id="__codelineno-0-3813" name="__codelineno-0-3813"></a>    <span class="n">check_ffmpeg_available</span><span class="p">()</span>
 </span><span id="__span-0-3814"><a id="__codelineno-0-3814" name="__codelineno-0-3814"></a>
-</span><span id="__span-0-3815"><a id="__codelineno-0-3815" name="__codelineno-0-3815"></a>    <span class="c1"># Convert dataclass → ctypes struct; None stays None (→ NULL in C)</span>
-</span><span id="__span-0-3816"><a id="__codelineno-0-3816" name="__codelineno-0-3816"></a>    <span class="n">proxy_ref</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-3817"><a id="__codelineno-0-3817" name="__codelineno-0-3817"></a>    <span class="n">c_settings</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-3818"><a id="__codelineno-0-3818" name="__codelineno-0-3818"></a>    <span class="k">if</span> <span class="n">proxy_settings</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-3819"><a id="__codelineno-0-3819" name="__codelineno-0-3819"></a>        <span class="n">c_settings</span> <span class="o">=</span> <span class="n">proxy_settings</span><span class="o">.</span><span class="n">_to_c_struct</span><span class="p">()</span>
-</span><span id="__span-0-3820"><a id="__codelineno-0-3820" name="__codelineno-0-3820"></a>        <span class="n">proxy_ref</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">c_settings</span><span class="p">)</span>
-</span><span id="__span-0-3821"><a id="__codelineno-0-3821" name="__codelineno-0-3821"></a>
-</span><span id="__span-0-3822"><a id="__codelineno-0-3822" name="__codelineno-0-3822"></a>    <span class="n">subscriber_buf</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_char</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">list_func</span><span class="p">))</span><span class="o">.</span><span class="n">from_buffer</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-</span><span id="__span-0-3823"><a id="__codelineno-0-3823" name="__codelineno-0-3823"></a>    <span class="n">qr_cb</span> <span class="o">=</span> <span class="n">func_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__onQr</span><span class="p">)</span>
-</span><span id="__span-0-3824"><a id="__codelineno-0-3824" name="__codelineno-0-3824"></a>    <span class="n">login_cb</span> <span class="o">=</span> <span class="n">func_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__onLoginStatus</span><span class="p">)</span>
-</span><span id="__span-0-3825"><a id="__codelineno-0-3825" name="__codelineno-0-3825"></a>    <span class="n">event_cb</span> <span class="o">=</span> <span class="n">func_callback_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">execute</span><span class="p">)</span>
-</span><span id="__span-0-3826"><a id="__codelineno-0-3826" name="__codelineno-0-3826"></a>    <span class="n">log_cb</span> <span class="o">=</span> <span class="n">func_callback_bytes2</span><span class="p">(</span><span class="n">log_whatsmeow</span><span class="p">)</span>
+</span><span id="__span-0-3815"><a id="__codelineno-0-3815" name="__codelineno-0-3815"></a>    <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span> <span class="ow">or</span> <span class="sa">b</span><span class="s2">""</span>
+</span><span id="__span-0-3816"><a id="__codelineno-0-3816" name="__codelineno-0-3816"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+</span><span id="__span-0-3817"><a id="__codelineno-0-3817" name="__codelineno-0-3817"></a>    <span class="n">_events_module</span><span class="o">.</span><span class="n">set_event_loop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span>
+</span><span id="__span-0-3818"><a id="__codelineno-0-3818" name="__codelineno-0-3818"></a>    <span class="c1"># Convert the list of functions to a bytearray</span>
+</span><span id="__span-0-3819"><a id="__codelineno-0-3819" name="__codelineno-0-3819"></a>    <span class="n">d</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">list_func</span><span class="p">))</span>
+</span><span id="__span-0-3820"><a id="__codelineno-0-3820" name="__codelineno-0-3820"></a>    <span class="n">_log_</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"🔒 Attempting to connect to the WhatsApp servers."</span><span class="p">)</span>
+</span><span id="__span-0-3821"><a id="__codelineno-0-3821" name="__codelineno-0-3821"></a>    <span class="c1"># Set device properties</span>
+</span><span id="__span-0-3822"><a id="__codelineno-0-3822" name="__codelineno-0-3822"></a>    <span class="n">deviceprops</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-3823"><a id="__codelineno-0-3823" name="__codelineno-0-3823"></a>        <span class="n">DeviceProps</span><span class="p">(</span><span class="n">os</span><span class="o">=</span><span class="s2">"Neonize"</span><span class="p">,</span> <span class="n">platformType</span><span class="o">=</span><span class="n">DeviceProps</span><span class="o">.</span><span class="n">SAFARI</span><span class="p">)</span>
+</span><span id="__span-0-3824"><a id="__codelineno-0-3824" name="__codelineno-0-3824"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device_props</span> <span class="ow">is</span> <span class="kc">None</span>
+</span><span id="__span-0-3825"><a id="__codelineno-0-3825" name="__codelineno-0-3825"></a>        <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">device_props</span>
+</span><span id="__span-0-3826"><a id="__codelineno-0-3826" name="__codelineno-0-3826"></a>    <span class="p">)</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
 </span><span id="__span-0-3827"><a id="__codelineno-0-3827" name="__codelineno-0-3827"></a>
-</span><span id="__span-0-3828"><a id="__codelineno-0-3828" name="__codelineno-0-3828"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_connect_refs</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-3829"><a id="__codelineno-0-3829" name="__codelineno-0-3829"></a>        <span class="n">qr_cb</span><span class="p">,</span>
-</span><span id="__span-0-3830"><a id="__codelineno-0-3830" name="__codelineno-0-3830"></a>        <span class="n">login_cb</span><span class="p">,</span>
-</span><span id="__span-0-3831"><a id="__codelineno-0-3831" name="__codelineno-0-3831"></a>        <span class="n">event_cb</span><span class="p">,</span>
-</span><span id="__span-0-3832"><a id="__codelineno-0-3832" name="__codelineno-0-3832"></a>        <span class="n">log_cb</span><span class="p">,</span>
-</span><span id="__span-0-3833"><a id="__codelineno-0-3833" name="__codelineno-0-3833"></a>        <span class="n">subscriber_buf</span><span class="p">,</span>
-</span><span id="__span-0-3834"><a id="__codelineno-0-3834" name="__codelineno-0-3834"></a>        <span class="n">d</span><span class="p">,</span>
-</span><span id="__span-0-3835"><a id="__codelineno-0-3835" name="__codelineno-0-3835"></a>        <span class="n">c_settings</span><span class="p">,</span>
-</span><span id="__span-0-3836"><a id="__codelineno-0-3836" name="__codelineno-0-3836"></a>    <span class="p">)</span>
-</span><span id="__span-0-3837"><a id="__codelineno-0-3837" name="__codelineno-0-3837"></a>
-</span><span id="__span-0-3838"><a id="__codelineno-0-3838" name="__codelineno-0-3838"></a>    <span class="c1"># Initiate connection to the server</span>
-</span><span id="__span-0-3839"><a id="__codelineno-0-3839" name="__codelineno-0-3839"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_connect_and_check</span><span class="p">():</span>
-</span><span id="__span-0-3840"><a id="__codelineno-0-3840" name="__codelineno-0-3840"></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-0-3841"><a id="__codelineno-0-3841" name="__codelineno-0-3841"></a>            <span class="n">err</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__client</span><span class="o">.</span><span class="n">Neonize</span><span class="p">(</span>
-</span><span id="__span-0-3842"><a id="__codelineno-0-3842" name="__codelineno-0-3842"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span>
-</span><span id="__span-0-3843"><a id="__codelineno-0-3843" name="__codelineno-0-3843"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
-</span><span id="__span-0-3844"><a id="__codelineno-0-3844" name="__codelineno-0-3844"></a>                <span class="n">jidbuf</span><span class="p">,</span>
-</span><span id="__span-0-3845"><a id="__codelineno-0-3845" name="__codelineno-0-3845"></a>                <span class="n">jidbuf_size</span><span class="p">,</span>
-</span><span id="__span-0-3846"><a id="__codelineno-0-3846" name="__codelineno-0-3846"></a>                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_device</span><span class="p">),</span>
-</span><span id="__span-0-3847"><a id="__codelineno-0-3847" name="__codelineno-0-3847"></a>                <span class="n">LogLevel</span><span class="o">.</span><span class="n">from_logging</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">level</span><span class="p">)</span><span class="o">.</span><span class="n">level</span><span class="p">,</span>
-</span><span id="__span-0-3848"><a id="__codelineno-0-3848" name="__codelineno-0-3848"></a>                <span class="n">qr_cb</span><span class="p">,</span>
-</span><span id="__span-0-3849"><a id="__codelineno-0-3849" name="__codelineno-0-3849"></a>                <span class="n">login_cb</span><span class="p">,</span>
-</span><span id="__span-0-3850"><a id="__codelineno-0-3850" name="__codelineno-0-3850"></a>                <span class="n">event_cb</span><span class="p">,</span>
-</span><span id="__span-0-3851"><a id="__codelineno-0-3851" name="__codelineno-0-3851"></a>                <span class="n">log_cb</span><span class="p">,</span>
-</span><span id="__span-0-3852"><a id="__codelineno-0-3852" name="__codelineno-0-3852"></a>                <span class="n">subscriber_buf</span><span class="p">,</span>
-</span><span id="__span-0-3853"><a id="__codelineno-0-3853" name="__codelineno-0-3853"></a>                <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">),</span>
-</span><span id="__span-0-3854"><a id="__codelineno-0-3854" name="__codelineno-0-3854"></a>                <span class="n">deviceprops</span><span class="p">,</span>
-</span><span id="__span-0-3855"><a id="__codelineno-0-3855" name="__codelineno-0-3855"></a>                <span class="nb">len</span><span class="p">(</span><span class="n">deviceprops</span><span class="p">),</span>
-</span><span id="__span-0-3856"><a id="__codelineno-0-3856" name="__codelineno-0-3856"></a>                <span class="n">payload</span><span class="p">,</span>
-</span><span id="__span-0-3857"><a id="__codelineno-0-3857" name="__codelineno-0-3857"></a>                <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="p">),</span>
-</span><span id="__span-0-3858"><a id="__codelineno-0-3858" name="__codelineno-0-3858"></a>                <span class="n">proxy_ref</span><span class="p">,</span>
-</span><span id="__span-0-3859"><a id="__codelineno-0-3859" name="__codelineno-0-3859"></a>            <span class="p">)</span>
-</span><span id="__span-0-3860"><a id="__codelineno-0-3860" name="__codelineno-0-3860"></a>        <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">CancelledError</span><span class="p">:</span>
-</span><span id="__span-0-3861"><a id="__codelineno-0-3861" name="__codelineno-0-3861"></a>            <span class="c1"># Neonize() is a blocking Go call dispatched to a non-daemon</span>
-</span><span id="__span-0-3862"><a id="__codelineno-0-3862" name="__codelineno-0-3862"></a>            <span class="c1"># ThreadPoolExecutor thread via asyncio.to_thread; it only</span>
-</span><span id="__span-0-3863"><a id="__codelineno-0-3863" name="__codelineno-0-3863"></a>            <span class="c1"># returns once the Go-side context is cancelled. Cancelling</span>
-</span><span id="__span-0-3864"><a id="__codelineno-0-3864" name="__codelineno-0-3864"></a>            <span class="c1"># this task -- which is what asyncio.run() does on a</span>
-</span><span id="__span-0-3865"><a id="__codelineno-0-3865" name="__codelineno-0-3865"></a>            <span class="c1"># KeyboardInterrupt -- unblocks this coroutine but cannot stop</span>
-</span><span id="__span-0-3866"><a id="__codelineno-0-3866" name="__codelineno-0-3866"></a>            <span class="c1"># the worker thread. Without signalling Go, that thread runs</span>
-</span><span id="__span-0-3867"><a id="__codelineno-0-3867" name="__codelineno-0-3867"></a>            <span class="c1"># forever and interpreter shutdown hangs joining it. Tell Go to</span>
-</span><span id="__span-0-3868"><a id="__codelineno-0-3868" name="__codelineno-0-3868"></a>            <span class="c1"># stop so Neonize() returns and the worker thread can exit.</span>
-</span><span id="__span-0-3869"><a id="__codelineno-0-3869" name="__codelineno-0-3869"></a>            <span class="n">gocode</span><span class="o">.</span><span class="n">Stop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
-</span><span id="__span-0-3870"><a id="__codelineno-0-3870" name="__codelineno-0-3870"></a>            <span class="k">raise</span>
-</span><span id="__span-0-3871"><a id="__codelineno-0-3871" name="__codelineno-0-3871"></a>        <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
-</span><span id="__span-0-3872"><a id="__codelineno-0-3872" name="__codelineno-0-3872"></a>            <span class="k">raise</span> <span class="n">NeonizeError</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
-</span><span id="__span-0-3873"><a id="__codelineno-0-3873" name="__codelineno-0-3873"></a>
-</span><span id="__span-0-3874"><a id="__codelineno-0-3874" name="__codelineno-0-3874"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">connect_task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">_connect_and_check</span><span class="p">())</span>
-</span><span id="__span-0-3875"><a id="__codelineno-0-3875" name="__codelineno-0-3875"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_task</span>
+</span><span id="__span-0-3828"><a id="__codelineno-0-3828" name="__codelineno-0-3828"></a>    <span class="n">jidbuf_size</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-0-3829"><a id="__codelineno-0-3829" name="__codelineno-0-3829"></a>    <span class="n">jidbuf</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">""</span>
+</span><span id="__span-0-3830"><a id="__codelineno-0-3830" name="__codelineno-0-3830"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jid</span><span class="p">:</span>
+</span><span id="__span-0-3831"><a id="__codelineno-0-3831" name="__codelineno-0-3831"></a>        <span class="n">jidbuf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jid</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
+</span><span id="__span-0-3832"><a id="__codelineno-0-3832" name="__codelineno-0-3832"></a>        <span class="n">jidbuf_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">jidbuf</span><span class="p">)</span>
+</span><span id="__span-0-3833"><a id="__codelineno-0-3833" name="__codelineno-0-3833"></a>
+</span><span id="__span-0-3834"><a id="__codelineno-0-3834" name="__codelineno-0-3834"></a>    <span class="c1"># Convert dataclass → ctypes struct; None stays None (→ NULL in C)</span>
+</span><span id="__span-0-3835"><a id="__codelineno-0-3835" name="__codelineno-0-3835"></a>    <span class="n">proxy_ref</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-3836"><a id="__codelineno-0-3836" name="__codelineno-0-3836"></a>    <span class="n">c_settings</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-3837"><a id="__codelineno-0-3837" name="__codelineno-0-3837"></a>    <span class="k">if</span> <span class="n">proxy_settings</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-3838"><a id="__codelineno-0-3838" name="__codelineno-0-3838"></a>        <span class="n">c_settings</span> <span class="o">=</span> <span class="n">proxy_settings</span><span class="o">.</span><span class="n">_to_c_struct</span><span class="p">()</span>
+</span><span id="__span-0-3839"><a id="__codelineno-0-3839" name="__codelineno-0-3839"></a>        <span class="n">proxy_ref</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">c_settings</span><span class="p">)</span>
+</span><span id="__span-0-3840"><a id="__codelineno-0-3840" name="__codelineno-0-3840"></a>
+</span><span id="__span-0-3841"><a id="__codelineno-0-3841" name="__codelineno-0-3841"></a>    <span class="n">subscriber_buf</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_char</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">list_func</span><span class="p">))</span><span class="o">.</span><span class="n">from_buffer</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</span><span id="__span-0-3842"><a id="__codelineno-0-3842" name="__codelineno-0-3842"></a>    <span class="n">qr_cb</span> <span class="o">=</span> <span class="n">func_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__onQr</span><span class="p">)</span>
+</span><span id="__span-0-3843"><a id="__codelineno-0-3843" name="__codelineno-0-3843"></a>    <span class="n">login_cb</span> <span class="o">=</span> <span class="n">func_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__onLoginStatus</span><span class="p">)</span>
+</span><span id="__span-0-3844"><a id="__codelineno-0-3844" name="__codelineno-0-3844"></a>    <span class="n">event_cb</span> <span class="o">=</span> <span class="n">func_callback_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">execute</span><span class="p">)</span>
+</span><span id="__span-0-3845"><a id="__codelineno-0-3845" name="__codelineno-0-3845"></a>    <span class="n">log_cb</span> <span class="o">=</span> <span class="n">func_callback_bytes2</span><span class="p">(</span><span class="n">log_whatsmeow</span><span class="p">)</span>
+</span><span id="__span-0-3846"><a id="__codelineno-0-3846" name="__codelineno-0-3846"></a>
+</span><span id="__span-0-3847"><a id="__codelineno-0-3847" name="__codelineno-0-3847"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_connect_refs</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-3848"><a id="__codelineno-0-3848" name="__codelineno-0-3848"></a>        <span class="n">qr_cb</span><span class="p">,</span>
+</span><span id="__span-0-3849"><a id="__codelineno-0-3849" name="__codelineno-0-3849"></a>        <span class="n">login_cb</span><span class="p">,</span>
+</span><span id="__span-0-3850"><a id="__codelineno-0-3850" name="__codelineno-0-3850"></a>        <span class="n">event_cb</span><span class="p">,</span>
+</span><span id="__span-0-3851"><a id="__codelineno-0-3851" name="__codelineno-0-3851"></a>        <span class="n">log_cb</span><span class="p">,</span>
+</span><span id="__span-0-3852"><a id="__codelineno-0-3852" name="__codelineno-0-3852"></a>        <span class="n">subscriber_buf</span><span class="p">,</span>
+</span><span id="__span-0-3853"><a id="__codelineno-0-3853" name="__codelineno-0-3853"></a>        <span class="n">d</span><span class="p">,</span>
+</span><span id="__span-0-3854"><a id="__codelineno-0-3854" name="__codelineno-0-3854"></a>        <span class="n">c_settings</span><span class="p">,</span>
+</span><span id="__span-0-3855"><a id="__codelineno-0-3855" name="__codelineno-0-3855"></a>    <span class="p">)</span>
+</span><span id="__span-0-3856"><a id="__codelineno-0-3856" name="__codelineno-0-3856"></a>
+</span><span id="__span-0-3857"><a id="__codelineno-0-3857" name="__codelineno-0-3857"></a>    <span class="c1"># Initiate connection to the server</span>
+</span><span id="__span-0-3858"><a id="__codelineno-0-3858" name="__codelineno-0-3858"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_connect_and_check</span><span class="p">():</span>
+</span><span id="__span-0-3859"><a id="__codelineno-0-3859" name="__codelineno-0-3859"></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-0-3860"><a id="__codelineno-0-3860" name="__codelineno-0-3860"></a>            <span class="n">err</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__client</span><span class="o">.</span><span class="n">Neonize</span><span class="p">(</span>
+</span><span id="__span-0-3861"><a id="__codelineno-0-3861" name="__codelineno-0-3861"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span>
+</span><span id="__span-0-3862"><a id="__codelineno-0-3862" name="__codelineno-0-3862"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+</span><span id="__span-0-3863"><a id="__codelineno-0-3863" name="__codelineno-0-3863"></a>                <span class="n">jidbuf</span><span class="p">,</span>
+</span><span id="__span-0-3864"><a id="__codelineno-0-3864" name="__codelineno-0-3864"></a>                <span class="n">jidbuf_size</span><span class="p">,</span>
+</span><span id="__span-0-3865"><a id="__codelineno-0-3865" name="__codelineno-0-3865"></a>                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_device</span><span class="p">),</span>
+</span><span id="__span-0-3866"><a id="__codelineno-0-3866" name="__codelineno-0-3866"></a>                <span class="n">LogLevel</span><span class="o">.</span><span class="n">from_logging</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">level</span><span class="p">)</span><span class="o">.</span><span class="n">level</span><span class="p">,</span>
+</span><span id="__span-0-3867"><a id="__codelineno-0-3867" name="__codelineno-0-3867"></a>                <span class="n">qr_cb</span><span class="p">,</span>
+</span><span id="__span-0-3868"><a id="__codelineno-0-3868" name="__codelineno-0-3868"></a>                <span class="n">login_cb</span><span class="p">,</span>
+</span><span id="__span-0-3869"><a id="__codelineno-0-3869" name="__codelineno-0-3869"></a>                <span class="n">event_cb</span><span class="p">,</span>
+</span><span id="__span-0-3870"><a id="__codelineno-0-3870" name="__codelineno-0-3870"></a>                <span class="n">log_cb</span><span class="p">,</span>
+</span><span id="__span-0-3871"><a id="__codelineno-0-3871" name="__codelineno-0-3871"></a>                <span class="n">subscriber_buf</span><span class="p">,</span>
+</span><span id="__span-0-3872"><a id="__codelineno-0-3872" name="__codelineno-0-3872"></a>                <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">),</span>
+</span><span id="__span-0-3873"><a id="__codelineno-0-3873" name="__codelineno-0-3873"></a>                <span class="n">deviceprops</span><span class="p">,</span>
+</span><span id="__span-0-3874"><a id="__codelineno-0-3874" name="__codelineno-0-3874"></a>                <span class="nb">len</span><span class="p">(</span><span class="n">deviceprops</span><span class="p">),</span>
+</span><span id="__span-0-3875"><a id="__codelineno-0-3875" name="__codelineno-0-3875"></a>                <span class="n">payload</span><span class="p">,</span>
+</span><span id="__span-0-3876"><a id="__codelineno-0-3876" name="__codelineno-0-3876"></a>                <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="p">),</span>
+</span><span id="__span-0-3877"><a id="__codelineno-0-3877" name="__codelineno-0-3877"></a>                <span class="n">proxy_ref</span><span class="p">,</span>
+</span><span id="__span-0-3878"><a id="__codelineno-0-3878" name="__codelineno-0-3878"></a>            <span class="p">)</span>
+</span><span id="__span-0-3879"><a id="__codelineno-0-3879" name="__codelineno-0-3879"></a>        <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">CancelledError</span><span class="p">:</span>
+</span><span id="__span-0-3880"><a id="__codelineno-0-3880" name="__codelineno-0-3880"></a>            <span class="c1"># Neonize() is a blocking Go call dispatched to a non-daemon</span>
+</span><span id="__span-0-3881"><a id="__codelineno-0-3881" name="__codelineno-0-3881"></a>            <span class="c1"># ThreadPoolExecutor thread via asyncio.to_thread; it only</span>
+</span><span id="__span-0-3882"><a id="__codelineno-0-3882" name="__codelineno-0-3882"></a>            <span class="c1"># returns once the Go-side context is cancelled. Cancelling</span>
+</span><span id="__span-0-3883"><a id="__codelineno-0-3883" name="__codelineno-0-3883"></a>            <span class="c1"># this task -- which is what asyncio.run() does on a</span>
+</span><span id="__span-0-3884"><a id="__codelineno-0-3884" name="__codelineno-0-3884"></a>            <span class="c1"># KeyboardInterrupt -- unblocks this coroutine but cannot stop</span>
+</span><span id="__span-0-3885"><a id="__codelineno-0-3885" name="__codelineno-0-3885"></a>            <span class="c1"># the worker thread. Without signalling Go, that thread runs</span>
+</span><span id="__span-0-3886"><a id="__codelineno-0-3886" name="__codelineno-0-3886"></a>            <span class="c1"># forever and interpreter shutdown hangs joining it. Tell Go to</span>
+</span><span id="__span-0-3887"><a id="__codelineno-0-3887" name="__codelineno-0-3887"></a>            <span class="c1"># stop so Neonize() returns and the worker thread can exit.</span>
+</span><span id="__span-0-3888"><a id="__codelineno-0-3888" name="__codelineno-0-3888"></a>            <span class="n">gocode</span><span class="o">.</span><span class="n">Stop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
+</span><span id="__span-0-3889"><a id="__codelineno-0-3889" name="__codelineno-0-3889"></a>            <span class="k">raise</span>
+</span><span id="__span-0-3890"><a id="__codelineno-0-3890" name="__codelineno-0-3890"></a>        <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+</span><span id="__span-0-3891"><a id="__codelineno-0-3891" name="__codelineno-0-3891"></a>            <span class="k">raise</span> <span class="n">NeonizeError</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+</span><span id="__span-0-3892"><a id="__codelineno-0-3892" name="__codelineno-0-3892"></a>
+</span><span id="__span-0-3893"><a id="__codelineno-0-3893" name="__codelineno-0-3893"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">connect_task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">_connect_and_check</span><span class="p">())</span>
+</span><span id="__span-0-3894"><a id="__codelineno-0-3894" name="__codelineno-0-3894"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_task</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3076,21 +3076,21 @@ database already stores other sessions.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>neonize/aioze/client.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3772">3772</a></span>
-<span class="normal"><a href="#__codelineno-0-3773">3773</a></span>
-<span class="normal"><a href="#__codelineno-0-3774">3774</a></span>
-<span class="normal"><a href="#__codelineno-0-3775">3775</a></span>
-<span class="normal"><a href="#__codelineno-0-3776">3776</a></span>
-<span class="normal"><a href="#__codelineno-0-3777">3777</a></span>
-<span class="normal"><a href="#__codelineno-0-3778">3778</a></span>
-<span class="normal"><a href="#__codelineno-0-3779">3779</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3772"><a id="__codelineno-0-3772" name="__codelineno-0-3772"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">connect_with_proxy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proxy_settings</span><span class="p">:</span> <span class="n">ProxySettings</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="__span-0-3773"><a id="__codelineno-0-3773" name="__codelineno-0-3773"></a><span class="w">    </span><span class="sd">"""Establishes a connection to the WhatsApp servers.</span>
-</span><span id="__span-0-3774"><a id="__codelineno-0-3774" name="__codelineno-0-3774"></a>
-</span><span id="__span-0-3775"><a id="__codelineno-0-3775" name="__codelineno-0-3775"></a><span class="sd">    :param proxy_settings: Optional proxy configuration. Pass ``None`` to connect without a proxy.</span>
-</span><span id="__span-0-3776"><a id="__codelineno-0-3776" name="__codelineno-0-3776"></a><span class="sd">    :type proxy_settings: ProxySettings | None</span>
-</span><span id="__span-0-3777"><a id="__codelineno-0-3777" name="__codelineno-0-3777"></a><span class="sd">    :raises NeonizeError: If connection setup fails.</span>
-</span><span id="__span-0-3778"><a id="__codelineno-0-3778" name="__codelineno-0-3778"></a><span class="sd">    """</span>
-</span><span id="__span-0-3779"><a id="__codelineno-0-3779" name="__codelineno-0-3779"></a>    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_with_proxy</span><span class="p">(</span><span class="n">proxy_settings</span><span class="o">=</span><span class="n">proxy_settings</span><span class="p">)</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3791">3791</a></span>
+<span class="normal"><a href="#__codelineno-0-3792">3792</a></span>
+<span class="normal"><a href="#__codelineno-0-3793">3793</a></span>
+<span class="normal"><a href="#__codelineno-0-3794">3794</a></span>
+<span class="normal"><a href="#__codelineno-0-3795">3795</a></span>
+<span class="normal"><a href="#__codelineno-0-3796">3796</a></span>
+<span class="normal"><a href="#__codelineno-0-3797">3797</a></span>
+<span class="normal"><a href="#__codelineno-0-3798">3798</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3791"><a id="__codelineno-0-3791" name="__codelineno-0-3791"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">connect_with_proxy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proxy_settings</span><span class="p">:</span> <span class="n">ProxySettings</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="__span-0-3792"><a id="__codelineno-0-3792" name="__codelineno-0-3792"></a><span class="w">    </span><span class="sd">"""Establishes a connection to the WhatsApp servers.</span>
+</span><span id="__span-0-3793"><a id="__codelineno-0-3793" name="__codelineno-0-3793"></a>
+</span><span id="__span-0-3794"><a id="__codelineno-0-3794" name="__codelineno-0-3794"></a><span class="sd">    :param proxy_settings: Optional proxy configuration. Pass ``None`` to connect without a proxy.</span>
+</span><span id="__span-0-3795"><a id="__codelineno-0-3795" name="__codelineno-0-3795"></a><span class="sd">    :type proxy_settings: ProxySettings | None</span>
+</span><span id="__span-0-3796"><a id="__codelineno-0-3796" name="__codelineno-0-3796"></a><span class="sd">    :raises NeonizeError: If connection setup fails.</span>
+</span><span id="__span-0-3797"><a id="__codelineno-0-3797" name="__codelineno-0-3797"></a><span class="sd">    """</span>
+</span><span id="__span-0-3798"><a id="__codelineno-0-3798" name="__codelineno-0-3798"></a>    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_with_proxy</span><span class="p">(</span><span class="n">proxy_settings</span><span class="o">=</span><span class="n">proxy_settings</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3119,15 +3119,15 @@ database already stores other sessions.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>neonize/aioze/client.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3877">3877</a></span>
-<span class="normal"><a href="#__codelineno-0-3878">3878</a></span>
-<span class="normal"><a href="#__codelineno-0-3879">3879</a></span>
-<span class="normal"><a href="#__codelineno-0-3880">3880</a></span>
-<span class="normal"><a href="#__codelineno-0-3881">3881</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3877"><a id="__codelineno-0-3877" name="__codelineno-0-3877"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-3878"><a id="__codelineno-0-3878" name="__codelineno-0-3878"></a><span class="w">    </span><span class="sd">"""</span>
-</span><span id="__span-0-3879"><a id="__codelineno-0-3879" name="__codelineno-0-3879"></a><span class="sd">    Disconnect the client</span>
-</span><span id="__span-0-3880"><a id="__codelineno-0-3880" name="__codelineno-0-3880"></a><span class="sd">    """</span>
-</span><span id="__span-0-3881"><a id="__codelineno-0-3881" name="__codelineno-0-3881"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__client</span><span class="o">.</span><span class="n">Disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3896">3896</a></span>
+<span class="normal"><a href="#__codelineno-0-3897">3897</a></span>
+<span class="normal"><a href="#__codelineno-0-3898">3898</a></span>
+<span class="normal"><a href="#__codelineno-0-3899">3899</a></span>
+<span class="normal"><a href="#__codelineno-0-3900">3900</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3896"><a id="__codelineno-0-3896" name="__codelineno-0-3896"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-3897"><a id="__codelineno-0-3897" name="__codelineno-0-3897"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-3898"><a id="__codelineno-0-3898" name="__codelineno-0-3898"></a><span class="sd">    Disconnect the client</span>
+</span><span id="__span-0-3899"><a id="__codelineno-0-3899" name="__codelineno-0-3899"></a><span class="sd">    """</span>
+</span><span id="__span-0-3900"><a id="__codelineno-0-3900" name="__codelineno-0-3900"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__client</span><span class="o">.</span><span class="n">Disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3156,15 +3156,15 @@ database already stores other sessions.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>neonize/aioze/client.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3639">3639</a></span>
-<span class="normal"><a href="#__codelineno-0-3640">3640</a></span>
-<span class="normal"><a href="#__codelineno-0-3641">3641</a></span>
-<span class="normal"><a href="#__codelineno-0-3642">3642</a></span>
-<span class="normal"><a href="#__codelineno-0-3643">3643</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3639"><a id="__codelineno-0-3639" name="__codelineno-0-3639"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-0-3640"><a id="__codelineno-0-3640" name="__codelineno-0-3640"></a><span class="w">    </span><span class="sd">"""</span>
-</span><span id="__span-0-3641"><a id="__codelineno-0-3641" name="__codelineno-0-3641"></a><span class="sd">    Stops the client and disconnects from the WhatsApp servers.</span>
-</span><span id="__span-0-3642"><a id="__codelineno-0-3642" name="__codelineno-0-3642"></a><span class="sd">    """</span>
-</span><span id="__span-0-3643"><a id="__codelineno-0-3643" name="__codelineno-0-3643"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__client</span><span class="o">.</span><span class="n">Stop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3658">3658</a></span>
+<span class="normal"><a href="#__codelineno-0-3659">3659</a></span>
+<span class="normal"><a href="#__codelineno-0-3660">3660</a></span>
+<span class="normal"><a href="#__codelineno-0-3661">3661</a></span>
+<span class="normal"><a href="#__codelineno-0-3662">3662</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3658"><a id="__codelineno-0-3658" name="__codelineno-0-3658"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-0-3659"><a id="__codelineno-0-3659" name="__codelineno-0-3659"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-3660"><a id="__codelineno-0-3660" name="__codelineno-0-3660"></a><span class="sd">    Stops the client and disconnects from the WhatsApp servers.</span>
+</span><span id="__span-0-3661"><a id="__codelineno-0-3661" name="__codelineno-0-3661"></a><span class="sd">    """</span>
+</span><span id="__span-0-3662"><a id="__codelineno-0-3662" name="__codelineno-0-3662"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__client</span><span class="o">.</span><span class="n">Stop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3193,15 +3193,15 @@ database already stores other sessions.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>neonize/aioze/client.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3633">3633</a></span>
-<span class="normal"><a href="#__codelineno-0-3634">3634</a></span>
-<span class="normal"><a href="#__codelineno-0-3635">3635</a></span>
-<span class="normal"><a href="#__codelineno-0-3636">3636</a></span>
-<span class="normal"><a href="#__codelineno-0-3637">3637</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3633"><a id="__codelineno-0-3633" name="__codelineno-0-3633"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">idle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-0-3634"><a id="__codelineno-0-3634" name="__codelineno-0-3634"></a><span class="w">    </span><span class="sd">"""</span>
-</span><span id="__span-0-3635"><a id="__codelineno-0-3635" name="__codelineno-0-3635"></a><span class="sd">    Idles the client</span>
-</span><span id="__span-0-3636"><a id="__codelineno-0-3636" name="__codelineno-0-3636"></a><span class="sd">    """</span>
-</span><span id="__span-0-3637"><a id="__codelineno-0-3637" name="__codelineno-0-3637"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_task</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3652">3652</a></span>
+<span class="normal"><a href="#__codelineno-0-3653">3653</a></span>
+<span class="normal"><a href="#__codelineno-0-3654">3654</a></span>
+<span class="normal"><a href="#__codelineno-0-3655">3655</a></span>
+<span class="normal"><a href="#__codelineno-0-3656">3656</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3652"><a id="__codelineno-0-3652" name="__codelineno-0-3652"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">idle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-0-3653"><a id="__codelineno-0-3653" name="__codelineno-0-3653"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-3654"><a id="__codelineno-0-3654" name="__codelineno-0-3654"></a><span class="sd">    Idles the client</span>
+</span><span id="__span-0-3655"><a id="__codelineno-0-3655" name="__codelineno-0-3655"></a><span class="sd">    """</span>
+</span><span id="__span-0-3656"><a id="__codelineno-0-3656" name="__codelineno-0-3656"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_task</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3256,27 +3256,27 @@ a new pairing (QR or pair code) is required on next connect.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>neonize/aioze/client.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2632">2632</a></span>
-<span class="normal"><a href="#__codelineno-0-2633">2633</a></span>
-<span class="normal"><a href="#__codelineno-0-2634">2634</a></span>
-<span class="normal"><a href="#__codelineno-0-2635">2635</a></span>
-<span class="normal"><a href="#__codelineno-0-2636">2636</a></span>
-<span class="normal"><a href="#__codelineno-0-2637">2637</a></span>
-<span class="normal"><a href="#__codelineno-0-2638">2638</a></span>
-<span class="normal"><a href="#__codelineno-0-2639">2639</a></span>
-<span class="normal"><a href="#__codelineno-0-2640">2640</a></span>
-<span class="normal"><a href="#__codelineno-0-2641">2641</a></span>
-<span class="normal"><a href="#__codelineno-0-2642">2642</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2632"><a id="__codelineno-0-2632" name="__codelineno-0-2632"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">logout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-0-2633"><a id="__codelineno-0-2633" name="__codelineno-0-2633"></a><span class="w">    </span><span class="sd">"""Logs the connected account out and invalidates its session credentials.</span>
-</span><span id="__span-0-2634"><a id="__codelineno-0-2634" name="__codelineno-0-2634"></a>
-</span><span id="__span-0-2635"><a id="__codelineno-0-2635" name="__codelineno-0-2635"></a><span class="sd">    After a successful logout the stored session can no longer be reused;</span>
-</span><span id="__span-0-2636"><a id="__codelineno-0-2636" name="__codelineno-0-2636"></a><span class="sd">    a new pairing (QR or pair code) is required on next connect.</span>
-</span><span id="__span-0-2637"><a id="__codelineno-0-2637" name="__codelineno-0-2637"></a>
-</span><span id="__span-0-2638"><a id="__codelineno-0-2638" name="__codelineno-0-2638"></a><span class="sd">    :raises LogoutError: If the logout request fails.</span>
-</span><span id="__span-0-2639"><a id="__codelineno-0-2639" name="__codelineno-0-2639"></a><span class="sd">    """</span>
-</span><span id="__span-0-2640"><a id="__codelineno-0-2640" name="__codelineno-0-2640"></a>    <span class="n">err</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__client</span><span class="o">.</span><span class="n">Logout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-</span><span id="__span-0-2641"><a id="__codelineno-0-2641" name="__codelineno-0-2641"></a>    <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
-</span><span id="__span-0-2642"><a id="__codelineno-0-2642" name="__codelineno-0-2642"></a>        <span class="k">raise</span> <span class="n">LogoutError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2651">2651</a></span>
+<span class="normal"><a href="#__codelineno-0-2652">2652</a></span>
+<span class="normal"><a href="#__codelineno-0-2653">2653</a></span>
+<span class="normal"><a href="#__codelineno-0-2654">2654</a></span>
+<span class="normal"><a href="#__codelineno-0-2655">2655</a></span>
+<span class="normal"><a href="#__codelineno-0-2656">2656</a></span>
+<span class="normal"><a href="#__codelineno-0-2657">2657</a></span>
+<span class="normal"><a href="#__codelineno-0-2658">2658</a></span>
+<span class="normal"><a href="#__codelineno-0-2659">2659</a></span>
+<span class="normal"><a href="#__codelineno-0-2660">2660</a></span>
+<span class="normal"><a href="#__codelineno-0-2661">2661</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2651"><a id="__codelineno-0-2651" name="__codelineno-0-2651"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">logout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-0-2652"><a id="__codelineno-0-2652" name="__codelineno-0-2652"></a><span class="w">    </span><span class="sd">"""Logs the connected account out and invalidates its session credentials.</span>
+</span><span id="__span-0-2653"><a id="__codelineno-0-2653" name="__codelineno-0-2653"></a>
+</span><span id="__span-0-2654"><a id="__codelineno-0-2654" name="__codelineno-0-2654"></a><span class="sd">    After a successful logout the stored session can no longer be reused;</span>
+</span><span id="__span-0-2655"><a id="__codelineno-0-2655" name="__codelineno-0-2655"></a><span class="sd">    a new pairing (QR or pair code) is required on next connect.</span>
+</span><span id="__span-0-2656"><a id="__codelineno-0-2656" name="__codelineno-0-2656"></a>
+</span><span id="__span-0-2657"><a id="__codelineno-0-2657" name="__codelineno-0-2657"></a><span class="sd">    :raises LogoutError: If the logout request fails.</span>
+</span><span id="__span-0-2658"><a id="__codelineno-0-2658" name="__codelineno-0-2658"></a><span class="sd">    """</span>
+</span><span id="__span-0-2659"><a id="__codelineno-0-2659" name="__codelineno-0-2659"></a>    <span class="n">err</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__client</span><span class="o">.</span><span class="n">Logout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+</span><span id="__span-0-2660"><a id="__codelineno-0-2660" name="__codelineno-0-2660"></a>    <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+</span><span id="__span-0-2661"><a id="__codelineno-0-2661" name="__codelineno-0-2661"></a>        <span class="k">raise</span> <span class="n">LogoutError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3331,21 +3331,21 @@ factory-wide event dispatch.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>neonize/aioze/client.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3885">3885</a></span>
-<span class="normal"><a href="#__codelineno-0-3886">3886</a></span>
-<span class="normal"><a href="#__codelineno-0-3887">3887</a></span>
-<span class="normal"><a href="#__codelineno-0-3888">3888</a></span>
-<span class="normal"><a href="#__codelineno-0-3889">3889</a></span>
-<span class="normal"><a href="#__codelineno-0-3890">3890</a></span>
-<span class="normal"><a href="#__codelineno-0-3891">3891</a></span>
-<span class="normal"><a href="#__codelineno-0-3892">3892</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3885"><a id="__codelineno-0-3885" name="__codelineno-0-3885"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"neonize.db"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-3886"><a id="__codelineno-0-3886" name="__codelineno-0-3886"></a><span class="w">    </span><span class="sd">"""</span>
-</span><span id="__span-0-3887"><a id="__codelineno-0-3887" name="__codelineno-0-3887"></a><span class="sd">    This class is used to create new instances of the client.</span>
-</span><span id="__span-0-3888"><a id="__codelineno-0-3888" name="__codelineno-0-3888"></a><span class="sd">    """</span>
-</span><span id="__span-0-3889"><a id="__codelineno-0-3889" name="__codelineno-0-3889"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">database_name</span> <span class="o">=</span> <span class="n">database_name</span>
-</span><span id="__span-0-3890"><a id="__codelineno-0-3890" name="__codelineno-0-3890"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NewAClient</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="__span-0-3891"><a id="__codelineno-0-3891" name="__codelineno-0-3891"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">EventsManager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</span><span id="__span-0-3892"><a id="__codelineno-0-3892" name="__codelineno-0-3892"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3904">3904</a></span>
+<span class="normal"><a href="#__codelineno-0-3905">3905</a></span>
+<span class="normal"><a href="#__codelineno-0-3906">3906</a></span>
+<span class="normal"><a href="#__codelineno-0-3907">3907</a></span>
+<span class="normal"><a href="#__codelineno-0-3908">3908</a></span>
+<span class="normal"><a href="#__codelineno-0-3909">3909</a></span>
+<span class="normal"><a href="#__codelineno-0-3910">3910</a></span>
+<span class="normal"><a href="#__codelineno-0-3911">3911</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3904"><a id="__codelineno-0-3904" name="__codelineno-0-3904"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"neonize.db"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-3905"><a id="__codelineno-0-3905" name="__codelineno-0-3905"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-3906"><a id="__codelineno-0-3906" name="__codelineno-0-3906"></a><span class="sd">    This class is used to create new instances of the client.</span>
+</span><span id="__span-0-3907"><a id="__codelineno-0-3907" name="__codelineno-0-3907"></a><span class="sd">    """</span>
+</span><span id="__span-0-3908"><a id="__codelineno-0-3908" name="__codelineno-0-3908"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">database_name</span> <span class="o">=</span> <span class="n">database_name</span>
+</span><span id="__span-0-3909"><a id="__codelineno-0-3909" name="__codelineno-0-3909"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NewAClient</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-0-3910"><a id="__codelineno-0-3910" name="__codelineno-0-3910"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">EventsManager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span><span id="__span-0-3911"><a id="__codelineno-0-3911" name="__codelineno-0-3911"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 </span></code></pre></div></td></tr></table></div>
                   </details>
 
@@ -3490,26 +3490,7 @@ factory-wide event dispatch.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>neonize/aioze/client.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3935">3935</a></span>
-<span class="normal"><a href="#__codelineno-0-3936">3936</a></span>
-<span class="normal"><a href="#__codelineno-0-3937">3937</a></span>
-<span class="normal"><a href="#__codelineno-0-3938">3938</a></span>
-<span class="normal"><a href="#__codelineno-0-3939">3939</a></span>
-<span class="normal"><a href="#__codelineno-0-3940">3940</a></span>
-<span class="normal"><a href="#__codelineno-0-3941">3941</a></span>
-<span class="normal"><a href="#__codelineno-0-3942">3942</a></span>
-<span class="normal"><a href="#__codelineno-0-3943">3943</a></span>
-<span class="normal"><a href="#__codelineno-0-3944">3944</a></span>
-<span class="normal"><a href="#__codelineno-0-3945">3945</a></span>
-<span class="normal"><a href="#__codelineno-0-3946">3946</a></span>
-<span class="normal"><a href="#__codelineno-0-3947">3947</a></span>
-<span class="normal"><a href="#__codelineno-0-3948">3948</a></span>
-<span class="normal"><a href="#__codelineno-0-3949">3949</a></span>
-<span class="normal"><a href="#__codelineno-0-3950">3950</a></span>
-<span class="normal"><a href="#__codelineno-0-3951">3951</a></span>
-<span class="normal"><a href="#__codelineno-0-3952">3952</a></span>
-<span class="normal"><a href="#__codelineno-0-3953">3953</a></span>
-<span class="normal"><a href="#__codelineno-0-3954">3954</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3954">3954</a></span>
 <span class="normal"><a href="#__codelineno-0-3955">3955</a></span>
 <span class="normal"><a href="#__codelineno-0-3956">3956</a></span>
 <span class="normal"><a href="#__codelineno-0-3957">3957</a></span>
@@ -3517,34 +3498,53 @@ factory-wide event dispatch.</p>
 <span class="normal"><a href="#__codelineno-0-3959">3959</a></span>
 <span class="normal"><a href="#__codelineno-0-3960">3960</a></span>
 <span class="normal"><a href="#__codelineno-0-3961">3961</a></span>
-<span class="normal"><a href="#__codelineno-0-3962">3962</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3935"><a id="__codelineno-0-3935" name="__codelineno-0-3935"></a><span class="k">def</span><span class="w"> </span><span class="nf">new_client</span><span class="p">(</span>
-</span><span id="__span-0-3936"><a id="__codelineno-0-3936" name="__codelineno-0-3936"></a>    <span class="bp">self</span><span class="p">,</span>
-</span><span id="__span-0-3937"><a id="__codelineno-0-3937" name="__codelineno-0-3937"></a>    <span class="n">jid</span><span class="p">:</span> <span class="n">JID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-3938"><a id="__codelineno-0-3938" name="__codelineno-0-3938"></a>    <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-3939"><a id="__codelineno-0-3939" name="__codelineno-0-3939"></a>    <span class="n">props</span><span class="p">:</span> <span class="n">DeviceProps</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-3940"><a id="__codelineno-0-3940" name="__codelineno-0-3940"></a>    <span class="n">new_device</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="__span-0-3941"><a id="__codelineno-0-3941" name="__codelineno-0-3941"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NewAClient</span><span class="p">:</span>
-</span><span id="__span-0-3942"><a id="__codelineno-0-3942" name="__codelineno-0-3942"></a><span class="w">    </span><span class="sd">"""</span>
-</span><span id="__span-0-3943"><a id="__codelineno-0-3943" name="__codelineno-0-3943"></a><span class="sd">    This function creates a new instance of the client. If the jid parameter is not provided, a new client will be created.</span>
-</span><span id="__span-0-3944"><a id="__codelineno-0-3944" name="__codelineno-0-3944"></a><span class="sd">    :param name: The name of the client.</span>
-</span><span id="__span-0-3945"><a id="__codelineno-0-3945" name="__codelineno-0-3945"></a><span class="sd">    :type name: str</span>
-</span><span id="__span-0-3946"><a id="__codelineno-0-3946" name="__codelineno-0-3946"></a><span class="sd">    :param uuid: The unique identifier of the client.</span>
-</span><span id="__span-0-3947"><a id="__codelineno-0-3947" name="__codelineno-0-3947"></a><span class="sd">    :type uuid: str</span>
-</span><span id="__span-0-3948"><a id="__codelineno-0-3948" name="__codelineno-0-3948"></a><span class="sd">    :param jid: The JID of the client.</span>
-</span><span id="__span-0-3949"><a id="__codelineno-0-3949" name="__codelineno-0-3949"></a><span class="sd">    :type jid: JID</span>
-</span><span id="__span-0-3950"><a id="__codelineno-0-3950" name="__codelineno-0-3950"></a><span class="sd">    :param props: The device properties of the client.</span>
-</span><span id="__span-0-3951"><a id="__codelineno-0-3951" name="__codelineno-0-3951"></a><span class="sd">    :type props: Optional[DeviceProps]</span>
-</span><span id="__span-0-3952"><a id="__codelineno-0-3952" name="__codelineno-0-3952"></a><span class="sd">    """</span>
-</span><span id="__span-0-3953"><a id="__codelineno-0-3953" name="__codelineno-0-3953"></a>
-</span><span id="__span-0-3954"><a id="__codelineno-0-3954" name="__codelineno-0-3954"></a>    <span class="k">if</span> <span class="n">jid</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">uuid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-3955"><a id="__codelineno-0-3955" name="__codelineno-0-3955"></a>        <span class="c1"># you must at least provide a uuid to make sure the client is</span>
-</span><span id="__span-0-3956"><a id="__codelineno-0-3956" name="__codelineno-0-3956"></a>        <span class="c1"># unique</span>
-</span><span id="__span-0-3957"><a id="__codelineno-0-3957" name="__codelineno-0-3957"></a>        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"JID and UUID cannot be none"</span><span class="p">)</span>
-</span><span id="__span-0-3958"><a id="__codelineno-0-3958" name="__codelineno-0-3958"></a>
-</span><span id="__span-0-3959"><a id="__codelineno-0-3959" name="__codelineno-0-3959"></a>    <span class="n">client</span> <span class="o">=</span> <span class="n">NewAClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database_name</span><span class="p">,</span> <span class="n">jid</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">new_device</span><span class="p">)</span>
-</span><span id="__span-0-3960"><a id="__codelineno-0-3960" name="__codelineno-0-3960"></a>    <span class="n">client</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">list_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">list_func</span>
-</span><span id="__span-0-3961"><a id="__codelineno-0-3961" name="__codelineno-0-3961"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
-</span><span id="__span-0-3962"><a id="__codelineno-0-3962" name="__codelineno-0-3962"></a>    <span class="k">return</span> <span class="n">client</span>
+<span class="normal"><a href="#__codelineno-0-3962">3962</a></span>
+<span class="normal"><a href="#__codelineno-0-3963">3963</a></span>
+<span class="normal"><a href="#__codelineno-0-3964">3964</a></span>
+<span class="normal"><a href="#__codelineno-0-3965">3965</a></span>
+<span class="normal"><a href="#__codelineno-0-3966">3966</a></span>
+<span class="normal"><a href="#__codelineno-0-3967">3967</a></span>
+<span class="normal"><a href="#__codelineno-0-3968">3968</a></span>
+<span class="normal"><a href="#__codelineno-0-3969">3969</a></span>
+<span class="normal"><a href="#__codelineno-0-3970">3970</a></span>
+<span class="normal"><a href="#__codelineno-0-3971">3971</a></span>
+<span class="normal"><a href="#__codelineno-0-3972">3972</a></span>
+<span class="normal"><a href="#__codelineno-0-3973">3973</a></span>
+<span class="normal"><a href="#__codelineno-0-3974">3974</a></span>
+<span class="normal"><a href="#__codelineno-0-3975">3975</a></span>
+<span class="normal"><a href="#__codelineno-0-3976">3976</a></span>
+<span class="normal"><a href="#__codelineno-0-3977">3977</a></span>
+<span class="normal"><a href="#__codelineno-0-3978">3978</a></span>
+<span class="normal"><a href="#__codelineno-0-3979">3979</a></span>
+<span class="normal"><a href="#__codelineno-0-3980">3980</a></span>
+<span class="normal"><a href="#__codelineno-0-3981">3981</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3954"><a id="__codelineno-0-3954" name="__codelineno-0-3954"></a><span class="k">def</span><span class="w"> </span><span class="nf">new_client</span><span class="p">(</span>
+</span><span id="__span-0-3955"><a id="__codelineno-0-3955" name="__codelineno-0-3955"></a>    <span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-0-3956"><a id="__codelineno-0-3956" name="__codelineno-0-3956"></a>    <span class="n">jid</span><span class="p">:</span> <span class="n">JID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-3957"><a id="__codelineno-0-3957" name="__codelineno-0-3957"></a>    <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-3958"><a id="__codelineno-0-3958" name="__codelineno-0-3958"></a>    <span class="n">props</span><span class="p">:</span> <span class="n">DeviceProps</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-3959"><a id="__codelineno-0-3959" name="__codelineno-0-3959"></a>    <span class="n">new_device</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-3960"><a id="__codelineno-0-3960" name="__codelineno-0-3960"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NewAClient</span><span class="p">:</span>
+</span><span id="__span-0-3961"><a id="__codelineno-0-3961" name="__codelineno-0-3961"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-3962"><a id="__codelineno-0-3962" name="__codelineno-0-3962"></a><span class="sd">    This function creates a new instance of the client. If the jid parameter is not provided, a new client will be created.</span>
+</span><span id="__span-0-3963"><a id="__codelineno-0-3963" name="__codelineno-0-3963"></a><span class="sd">    :param name: The name of the client.</span>
+</span><span id="__span-0-3964"><a id="__codelineno-0-3964" name="__codelineno-0-3964"></a><span class="sd">    :type name: str</span>
+</span><span id="__span-0-3965"><a id="__codelineno-0-3965" name="__codelineno-0-3965"></a><span class="sd">    :param uuid: The unique identifier of the client.</span>
+</span><span id="__span-0-3966"><a id="__codelineno-0-3966" name="__codelineno-0-3966"></a><span class="sd">    :type uuid: str</span>
+</span><span id="__span-0-3967"><a id="__codelineno-0-3967" name="__codelineno-0-3967"></a><span class="sd">    :param jid: The JID of the client.</span>
+</span><span id="__span-0-3968"><a id="__codelineno-0-3968" name="__codelineno-0-3968"></a><span class="sd">    :type jid: JID</span>
+</span><span id="__span-0-3969"><a id="__codelineno-0-3969" name="__codelineno-0-3969"></a><span class="sd">    :param props: The device properties of the client.</span>
+</span><span id="__span-0-3970"><a id="__codelineno-0-3970" name="__codelineno-0-3970"></a><span class="sd">    :type props: Optional[DeviceProps]</span>
+</span><span id="__span-0-3971"><a id="__codelineno-0-3971" name="__codelineno-0-3971"></a><span class="sd">    """</span>
+</span><span id="__span-0-3972"><a id="__codelineno-0-3972" name="__codelineno-0-3972"></a>
+</span><span id="__span-0-3973"><a id="__codelineno-0-3973" name="__codelineno-0-3973"></a>    <span class="k">if</span> <span class="n">jid</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">uuid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-3974"><a id="__codelineno-0-3974" name="__codelineno-0-3974"></a>        <span class="c1"># you must at least provide a uuid to make sure the client is</span>
+</span><span id="__span-0-3975"><a id="__codelineno-0-3975" name="__codelineno-0-3975"></a>        <span class="c1"># unique</span>
+</span><span id="__span-0-3976"><a id="__codelineno-0-3976" name="__codelineno-0-3976"></a>        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"JID and UUID cannot be none"</span><span class="p">)</span>
+</span><span id="__span-0-3977"><a id="__codelineno-0-3977" name="__codelineno-0-3977"></a>
+</span><span id="__span-0-3978"><a id="__codelineno-0-3978" name="__codelineno-0-3978"></a>    <span class="n">client</span> <span class="o">=</span> <span class="n">NewAClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database_name</span><span class="p">,</span> <span class="n">jid</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">new_device</span><span class="p">)</span>
+</span><span id="__span-0-3979"><a id="__codelineno-0-3979" name="__codelineno-0-3979"></a>    <span class="n">client</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">list_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">list_func</span>
+</span><span id="__span-0-3980"><a id="__codelineno-0-3980" name="__codelineno-0-3980"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+</span><span id="__span-0-3981"><a id="__codelineno-0-3981" name="__codelineno-0-3981"></a>    <span class="k">return</span> <span class="n">client</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3569,11 +3569,11 @@ factory-wide event dispatch.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>neonize/aioze/client.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3924">3924</a></span>
-<span class="normal"><a href="#__codelineno-0-3925">3925</a></span>
-<span class="normal"><a href="#__codelineno-0-3926">3926</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3924"><a id="__codelineno-0-3924" name="__codelineno-0-3924"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_all_devices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Device</span><span class="p">]:</span>
-</span><span id="__span-0-3925"><a id="__codelineno-0-3925" name="__codelineno-0-3925"></a><span class="w">    </span><span class="sd">"""Retrieves all devices associated with the current account from the database."""</span>
-</span><span id="__span-0-3926"><a id="__codelineno-0-3926" name="__codelineno-0-3926"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_devices_from_db</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database_name</span><span class="p">)</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3943">3943</a></span>
+<span class="normal"><a href="#__codelineno-0-3944">3944</a></span>
+<span class="normal"><a href="#__codelineno-0-3945">3945</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3943"><a id="__codelineno-0-3943" name="__codelineno-0-3943"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_all_devices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Device</span><span class="p">]:</span>
+</span><span id="__span-0-3944"><a id="__codelineno-0-3944" name="__codelineno-0-3944"></a><span class="w">    </span><span class="sd">"""Retrieves all devices associated with the current account from the database."""</span>
+</span><span id="__span-0-3945"><a id="__codelineno-0-3945" name="__codelineno-0-3945"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_devices_from_db</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database_name</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3603,17 +3603,17 @@ factory-wide event dispatch.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>neonize/aioze/client.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3928">3928</a></span>
-<span class="normal"><a href="#__codelineno-0-3929">3929</a></span>
-<span class="normal"><a href="#__codelineno-0-3930">3930</a></span>
-<span class="normal"><a href="#__codelineno-0-3931">3931</a></span>
-<span class="normal"><a href="#__codelineno-0-3932">3932</a></span>
-<span class="normal"><a href="#__codelineno-0-3933">3933</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3928"><a id="__codelineno-0-3928" name="__codelineno-0-3928"></a><span class="nd">@staticmethod</span>
-</span><span id="__span-0-3929"><a id="__codelineno-0-3929" name="__codelineno-0-3929"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">():</span>
-</span><span id="__span-0-3930"><a id="__codelineno-0-3930" name="__codelineno-0-3930"></a><span class="w">    </span><span class="sd">"""</span>
-</span><span id="__span-0-3931"><a id="__codelineno-0-3931" name="__codelineno-0-3931"></a><span class="sd">    Stops all clients and disconnects from the WhatsApp servers.</span>
-</span><span id="__span-0-3932"><a id="__codelineno-0-3932" name="__codelineno-0-3932"></a><span class="sd">    """</span>
-</span><span id="__span-0-3933"><a id="__codelineno-0-3933" name="__codelineno-0-3933"></a>    <span class="k">await</span> <span class="n">async_gocode</span><span class="o">.</span><span class="n">StopAll</span><span class="p">()</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-3947">3947</a></span>
+<span class="normal"><a href="#__codelineno-0-3948">3948</a></span>
+<span class="normal"><a href="#__codelineno-0-3949">3949</a></span>
+<span class="normal"><a href="#__codelineno-0-3950">3950</a></span>
+<span class="normal"><a href="#__codelineno-0-3951">3951</a></span>
+<span class="normal"><a href="#__codelineno-0-3952">3952</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-3947"><a id="__codelineno-0-3947" name="__codelineno-0-3947"></a><span class="nd">@staticmethod</span>
+</span><span id="__span-0-3948"><a id="__codelineno-0-3948" name="__codelineno-0-3948"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">():</span>
+</span><span id="__span-0-3949"><a id="__codelineno-0-3949" name="__codelineno-0-3949"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-3950"><a id="__codelineno-0-3950" name="__codelineno-0-3950"></a><span class="sd">    Stops all clients and disconnects from the WhatsApp servers.</span>
+</span><span id="__span-0-3951"><a id="__codelineno-0-3951" name="__codelineno-0-3951"></a><span class="sd">    """</span>
+</span><span id="__span-0-3952"><a id="__codelineno-0-3952" name="__codelineno-0-3952"></a>    <span class="k">await</span> <span class="n">async_gocode</span><span class="o">.</span><span class="n">StopAll</span><span class="p">()</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
