@@ -30,4 +30,4 @@ require (
 	golang.org/x/text v0.43.0 // indirect
 )
 
-replace go.mau.fi/whatsmeow => github.com/marcos-tulio/whatsmeow v0.0.1
+replace go.mau.fi/whatsmeow => github.com/marcos-tulio/whatsmeow v0.0.2
