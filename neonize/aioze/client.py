@@ -701,6 +701,7 @@ class NewAClient:
         ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
+        extra: SendRequestExtra = SendRequestExtra(),
     ) -> SendResponse:
         """Send a message to the specified JID.
 
@@ -724,6 +725,7 @@ class NewAClient:
         """
         to = _ensure_jid(to)
         to_bytes = to.SerializeToString()
+
         if isinstance(message, str):
             mentioned_groups = await self._parse_group_mention(message)
             mentioned_jid = self._parse_mention((ghost_mentions or message), mentions_are_lids)
@@ -741,18 +743,30 @@ class NewAClient:
                 msg = Message(extendedTextMessage=partial_msg)
         else:
             msg = message
+            
         if add_msg_secret:
             # optionally patch message with messageSecret to allow reactions and replies to messages sent to community announcements
             # see:
             # https://github.com/tulir/whatsmeow/issues/509#issuecomment-1842732773
             msg.messageContextInfo.messageSecret = urandom(32)
+
         message_bytes = msg.SerializeToString()
+        extra_buff = extra.SerializeToString()
+
         protobytes = await self.__client.SendMessage(
-            self.uuid, to_bytes, len(to_bytes), message_bytes, len(message_bytes)
+            self.uuid, 
+            to_bytes, 
+            len(to_bytes), 
+            message_bytes, 
+            len(message_bytes),
+            extra_buff,
+            len(extra_buff),
         )
         model = SendMessageReturnFunction.FromString(protobytes)
+
         if model.Error:
             raise SendMessageError(model.Error)
+        
         model.SendResponse.MergeFrom(model.SendResponse.__class__(Message=msg))
         return model.SendResponse
 
@@ -1650,15 +1664,16 @@ class NewAClient:
 
     async def build_image_message(
         self,
-        file: str | bytes,
-        caption: str | None = None,
-        quoted: neonize_proto.Message | None = None,
-        viewonce: bool = False,
-        spoiler: bool = False,
-        ghost_mentions: str | None = None,
-        mentions_are_lids: bool = False,
-        is_newsletter: bool = False,
-    ) -> Message:
+        file              : str | bytes,
+        caption           : str | None = None,
+        quoted            : neonize_proto.Message | None = None,
+        viewonce          : bool = False,
+        spoiler           : bool = False,
+        ghost_mentions    : str | None = None,
+        mentions_are_lids : bool = False,
+        is_newsletter     : bool = False,
+    ) -> tuple[Message, UploadResponse]:
+        
         """
         This function builds an image message. It takes a file (either a string or bytes),
         an optional caption, an optional quoted message, and a boolean indicating whether
@@ -1686,20 +1701,23 @@ class NewAClient:
         :rtype: Message
         """
         n_file = await get_bytes_from_name_or_url_async(file)
+
         img = Image.open(BytesIO(n_file))
         img.thumbnail(AspectRatioMethod(*img.size, res=200))
         if spoiler:
-            if img.mode != "RGB":
-                img = img.convert("RGB")
+            if img.mode != "RGB": img = img.convert("RGB")
             img = img.filter(ImageFilter.GaussianBlur(radius=12))
+
         thumbnail = BytesIO()
         img_saveable = img if img.mode == "RGB" else img.convert("RGB")
         img_saveable.save(thumbnail, format="jpeg")
+       
         upload = (
             await self.upload(n_file)
             if not is_newsletter
             else await self.upload_newsletter(n_file, MediaType.MediaImage)
         )
+
         message = Message(
             imageMessage=ImageMessage(
                 URL=upload.url,
@@ -1723,9 +1741,10 @@ class NewAClient:
                 ),
             )
         )
-        if quoted:
-            message.imageMessage.contextInfo.MergeFrom(self._make_quoted_message(quoted))
-        return message
+
+        if quoted: message.imageMessage.contextInfo.MergeFrom(self._make_quoted_message(quoted))
+
+        return message, upload
 
     async def send_image(
         self,

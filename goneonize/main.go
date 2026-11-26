@@ -665,7 +665,15 @@ func TestStruct() *C.struct_BytesReturn {
 }
 
 //export SendMessage
-func SendMessage(id *C.char, JIDByte *C.uchar, JIDSize C.int, messageByte *C.uchar, messageSize C.int) *C.struct_BytesReturn {
+func SendMessage(
+	id *C.char, 
+	JIDByte *C.uchar, 
+	JIDSize C.int, 
+	messageByte *C.uchar, 
+	messageSize C.int,
+	extra *C.uchar, 
+	extraSize C.int,
+) *C.struct_BytesReturn {
 	// fmt.Println("SendMessage: Getting client from ID")
 	client := clients[C.GoString(id)]
 	// fmt.Println("SendMessage: Getting JID byte array")
@@ -676,11 +684,13 @@ func SendMessage(id *C.char, JIDByte *C.uchar, JIDSize C.int, messageByte *C.uch
 	return_ := defproto.SendMessageReturnFunction{}
 	// fmt.Println("SendMessage: Unmarshaling JID")
 	err := proto.Unmarshal(jid, &neonize_jid)
+
 	if err != nil {
 		fmt.Println("SendMessage: Error unmarshaling JID:", err.Error())
 		return_.Error = proto.String(err.Error())
 		return ProtoReturnV3(&return_)
 	}
+	
 	// fmt.Println("SendMessage: Getting message byte array")
 	message_bytes := getByteByAddr(messageByte, messageSize)
 	// fmt.Println("SendMessage: Creating message variable")
@@ -692,10 +702,43 @@ func SendMessage(id *C.char, JIDByte *C.uchar, JIDSize C.int, messageByte *C.uch
 		return_.Error = proto.String(err_message.Error())
 		return ProtoReturnV3(&return_)
 	}
-	// bypass
-	var bypasser = Bypass(client, utils.DecodeJidProto(&neonize_jid), &message)
+
+	// Extra
+	var SendRequestExtra defproto.SendRequestExtra
+	err_extra := proto.Unmarshal(
+		getByteByAddr(extra, extraSize),
+		&SendRequestExtra,
+	)
+
+	if err_extra != nil {
+		fmt.Println("SendMessage: Error unmarshaling extras:", err_extra.Error())
+		return_.Error = proto.String(err_extra.Error())
+		return ProtoReturnV3(&return_)
+	}
+
+	var send_extra = utils.DecodeSendRequestExtra( &SendRequestExtra )
+	var chatJID = utils.DecodeJidProto(&neonize_jid)
+
+	// Bypass
+	ownID := client.Store.ID
+	if ownID != nil {
+		if chatJID.Server == types.GroupServer {
+			send_extra.TargetJID = []types.JID{*ownID}
+		}
+		send_extra.ID = GenerateMessageIDV2(context.Background(), client.Store.GetJID())
+	}
+	send_extra.AdditionalNodes = GenerateWABinary(context.Background(), chatJID, &message)
+
+	fmt.Println( "SendExtra: ", send_extra )
+
 	// fmt.Println("SendMessage: Sending message to WhatsApp")
-	sendresponse, err := client.SendMessage(context.Background(), utils.DecodeJidProto(&neonize_jid), &message, bypasser)
+	sendresponse, err := client.SendMessage(
+		context.Background(), 
+		chatJID, 
+		&message, 
+		send_extra,
+	)
+	
 	if err != nil {
 		fmt.Println("SendMessage: Error sending message:", err.Error())
 		return_.Error = proto.String(err.Error())
