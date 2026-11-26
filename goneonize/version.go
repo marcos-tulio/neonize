@@ -7,3 +7,4 @@ func GetVersion() *C.char {
 	version := "0.5.1"
 	return C.CString(version)
 }
+
