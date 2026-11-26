@@ -695,13 +695,13 @@ class NewAClient:
 
     async def send_message(
         self,
-        to: JID | str,
-        message: Message | str,
-        link_preview: bool = False,
-        ghost_mentions: str | None = None,
-        mentions_are_lids: bool = False,
-        add_msg_secret: bool = False,
-        extra: SendRequestExtra = SendRequestExtra(),
+        to                : JID | str,
+        message           : Message | str,
+        link_preview      : bool = False,
+        ghost_mentions    : str | None = None,
+        mentions_are_lids : bool = False,
+        add_msg_secret    : bool = False,
+        extra             : SendRequestExtra | None = None,
     ) -> SendResponse:
         """Send a message to the specified JID.
 
@@ -729,20 +729,22 @@ class NewAClient:
         if isinstance(message, str):
             mentioned_groups = await self._parse_group_mention(message)
             mentioned_jid = self._parse_mention((ghost_mentions or message), mentions_are_lids)
+
             partial_msg = ExtendedTextMessage(
                 text=message,
                 contextInfo=ContextInfo(mentionedJID=mentioned_jid, groupMentions=mentioned_groups),
             )
+
             if link_preview:
                 preview = await self._generate_link_preview(message)
                 if preview:
                     partial_msg.MergeFrom(preview)
+
             if partial_msg.previewType is None and not (mentioned_groups or mentioned_jid):
                 msg = Message(conversation=message)
             else:
                 msg = Message(extendedTextMessage=partial_msg)
-        else:
-            msg = message
+        else: msg = message
             
         if add_msg_secret:
             # optionally patch message with messageSecret to allow reactions and replies to messages sent to community announcements
@@ -750,8 +752,24 @@ class NewAClient:
             # https://github.com/tulir/whatsmeow/issues/509#issuecomment-1842732773
             msg.messageContextInfo.messageSecret = urandom(32)
 
+        if extra == None:
+            extra_buff = SendRequestExtra(
+                ID           = "",
+                Timeout      = -1,
+                InlineBotJID = JID(
+                    User       = to.User,
+                    RawAgent   = to.RawAgent,
+                    Device     = to.Device,
+                    Integrator = to.Integrator,
+                    Server     = ""
+                ),
+                MediaHandle  = "",
+                Peer         = False,
+            ).SerializeToString()
+
+        else: extra_buff = extra.SerializeToString()
+
         message_bytes = msg.SerializeToString()
-        extra_buff = extra.SerializeToString()
 
         protobytes = await self.__client.SendMessage(
             self.uuid, 
@@ -762,10 +780,9 @@ class NewAClient:
             extra_buff,
             len(extra_buff),
         )
-        model = SendMessageReturnFunction.FromString(protobytes)
 
-        if model.Error:
-            raise SendMessageError(model.Error)
+        model = SendMessageReturnFunction.FromString(protobytes)
+        if model.Error: raise SendMessageError(model.Error)
         
         model.SendResponse.MergeFrom(model.SendResponse.__class__(Message=msg))
         return model.SendResponse
@@ -1757,7 +1774,7 @@ class NewAClient:
         ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
-    ) -> SendResponse:
+    ) -> tuple[SendResponse, UploadResponse]:
         """Sends an image to the specified recipient.
 
         :param to: The JID (Jabber Identifier) of the recipient.
@@ -1783,20 +1800,19 @@ class NewAClient:
         :return: A function for handling the result of the image sending process.
         :rtype: SendResponse
         """
-        return await self.send_message(
-            to,
-            await self.build_image_message(
-                file,
-                caption,
-                quoted,
-                viewonce=viewonce,
-                ghost_mentions=ghost_mentions,
-                spoiler=spoiler,
-                mentions_are_lids=mentions_are_lids,
-                is_newsletter=to.Server == "newsletter",
-            ),
-            add_msg_secret=add_msg_secret,
+        
+        message, response = await self.build_image_message(
+            file,
+            caption,
+            quoted,
+            viewonce=viewonce,
+            ghost_mentions=ghost_mentions,
+            spoiler=spoiler,
+            mentions_are_lids=mentions_are_lids,
+            is_newsletter=to.Server == "newsletter",
         )
+        
+        return await self.send_message( to, message, add_msg_secret=add_msg_secret ), response
 
     async def build_album_content(
         self,
