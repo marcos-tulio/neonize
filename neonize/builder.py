@@ -12,6 +12,8 @@ from .proto.waE2E.WAWebProtobufsE2E_pb2 import (
 )
 from .utils.jid import Jid2String, JIDToNonAD
 
+from .proto.Neonize_pb2 import SendRequestExtra, JID
+
 
 def build_edit(chat: neonize.JID, message_id: str, new_message: Message) -> Message:
     """
@@ -102,4 +104,22 @@ def build_history_sync_request(message_info: neonize.MessageInfo, count: int) ->
                 ),
             ),
         )
+    )
+
+
+def build_send_request_extra( extra: SendRequestExtra | None, jid: JID  ) -> SendRequestExtra:
+    if extra != None: return extra
+    
+    return SendRequestExtra(
+        ID           = "",
+        Timeout      = -1,
+        InlineBotJID = JID(
+            User       = jid.User,
+            RawAgent   = jid.RawAgent,
+            Device     = jid.Device,
+            Integrator = jid.Integrator,
+            Server     = ""
+        ),
+        MediaHandle  = "",
+        Peer         = False,
     )

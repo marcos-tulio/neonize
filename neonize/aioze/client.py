@@ -35,7 +35,7 @@ from .._binder import (
     func_string,
     gocode,
 )
-from ..builder import build_edit, build_revoke
+from ..builder import build_edit, build_revoke, build_send_request_extra
 from ..exc import (
     BuildPollVoteCreationError,
     BuildPollVoteError,
@@ -176,7 +176,7 @@ from ..utils.calc import (
     AspectRatioMethod,
     auto_sticker,
     get_sidecar_from_upload,
-    original_sticker,
+    original_sticker
 )
 from ..utils.enum import (
     BlocklistAction,
@@ -752,24 +752,8 @@ class NewAClient:
             # https://github.com/tulir/whatsmeow/issues/509#issuecomment-1842732773
             msg.messageContextInfo.messageSecret = urandom(32)
 
-        if extra == None:
-            extra_buff = SendRequestExtra(
-                ID           = "",
-                Timeout      = -1,
-                InlineBotJID = JID(
-                    User       = to.User,
-                    RawAgent   = to.RawAgent,
-                    Device     = to.Device,
-                    Integrator = to.Integrator,
-                    Server     = ""
-                ),
-                MediaHandle  = "",
-                Peer         = False,
-            ).SerializeToString()
-
-        else: extra_buff = extra.SerializeToString()
-
         message_bytes = msg.SerializeToString()
+        extra_bytes   = build_send_request_extra( extra, to ).SerializeToString()
 
         protobytes = await self.__client.SendMessage(
             self.uuid, 
@@ -777,8 +761,8 @@ class NewAClient:
             len(to_bytes), 
             message_bytes, 
             len(message_bytes),
-            extra_buff,
-            len(extra_buff),
+            extra_bytes,
+            len(extra_bytes),
         )
 
         model = SendMessageReturnFunction.FromString(protobytes)
@@ -2798,6 +2782,48 @@ class NewAClient:
         ).decode()
         if err:
             raise NewsletterToggleMuteError(err)
+
+    async def newsletter_edit_message( 
+        self, 
+        chat_id    : JID, 
+        message_id : JID, 
+        message    : Message,
+        extra      : SendRequestExtra | None = None,
+    ) -> SendResponse:
+        
+        return await self.send_message(
+            to = chat_id,
+            message = build_edit(
+                chat        = chat_id,
+                message_id  = message_id,
+                new_message = message
+            ),
+            extra = extra
+        )
+
+    async def newsletter_edit_image_caption( 
+        self, 
+        chat_id          : JID, 
+        message_id       : JID, 
+        message_original : Message, 
+        caption          : str,
+        media_handle     : str | None = None 
+    ) -> SendResponse:
+        new_message: Message = message_original
+        new_message.imageMessage.caption = caption
+
+        extra = None
+
+        if media_handle != None:
+            extra = build_send_request_extra( jid = chat_id )
+            extra.MediaHandle = media_handle
+
+        return await self.newsletter_edit_message(
+            to         = chat_id,
+            message_id = message_id,
+            message    = new_message,
+            extra      = extra
+        )
 
     async def resolve_business_message_link(
         self, code: str

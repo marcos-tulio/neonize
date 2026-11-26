@@ -646,12 +646,13 @@ class NewClient:
 
     def send_message(
         self,
-        to: JID | str,
-        message: Message | str,
-        link_preview: bool = False,
-        ghost_mentions: str | None = None,
-        mentions_are_lids: bool = False,
-        add_msg_secret: bool = False,
+        to                : JID | str,
+        message           : Message | str,
+        link_preview      : bool = False,
+        ghost_mentions    : str | None = None,
+        mentions_are_lids : bool = False,
+        add_msg_secret    : bool = False,
+        extra             : SendRequestExtra | None = None,
     ) -> SendResponse:
         """Send a message to the specified JID.
 
@@ -675,6 +676,7 @@ class NewClient:
         """
         to = _ensure_jid(to)
         to_bytes = to.SerializeToString()
+
         if isinstance(message, str):
             mentioned_groups = self._parse_group_mention(message)
             mentioned_jid = self._parse_mention((ghost_mentions or message), mentions_are_lids)
@@ -692,16 +694,43 @@ class NewClient:
                 msg = Message(extendedTextMessage=partial_msg)
         else:
             msg = message
+        
         if add_msg_secret:
             msg.messageContextInfo.messageSecret = urandom(32)
+
+        if extra == None:
+            extra_buff = SendRequestExtra(
+                ID           = "",
+                Timeout      = -1,
+                InlineBotJID = JID(
+                    User       = to.User,
+                    RawAgent   = to.RawAgent,
+                    Device     = to.Device,
+                    Integrator = to.Integrator,
+                    Server     = ""
+                ),
+                MediaHandle  = "",
+                Peer         = False,
+            ).SerializeToString()
+
+        else: extra_buff = extra.SerializeToString()
+
         message_bytes = msg.SerializeToString()
+
         protobytes = self.__client.SendMessage(
-            self.uuid, to_bytes, len(to_bytes), message_bytes, len(message_bytes)
+            self.uuid, 
+            to_bytes, 
+            len(to_bytes), 
+            message_bytes, 
+            len(message_bytes),
+            extra_buff,
+            len(extra_buff),
         )
         model = SendMessageReturnFunction.FromString(protobytes)
-        if model.Error:
-            raise SendMessageError(model.Error)
+        
+        if model.Error: raise SendMessageError(model.Error)
         model.SendResponse.MergeFrom(model.SendResponse.__class__(Message=msg))
+
         return model.SendResponse
 
     def send_spr_group(
@@ -1697,7 +1726,7 @@ class NewClient:
         ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         is_newsletter: bool = False,
-    ) -> Message:
+    ) -> tuple[Message, UploadResponse]:
         """
         This function builds an image message. It takes a file (either a string or bytes),
         an optional caption, an optional quoted message, and a boolean indicating whether
@@ -1725,20 +1754,24 @@ class NewClient:
         :rtype: Message
         """
         n_file = get_bytes_from_name_or_url(file)
+
         img = Image.open(BytesIO(n_file))
         img.thumbnail(AspectRatioMethod(*img.size, res=200))
+
         if spoiler:
-            if img.mode != "RGB":
-                img = img.convert("RGB")
+            if img.mode != "RGB": img = img.convert("RGB")
             img = img.filter(ImageFilter.GaussianBlur(radius=12))
+
         thumbnail = BytesIO()
         img_saveable = img if img.mode == "RGB" else img.convert("RGB")
         img_saveable.save(thumbnail, format="jpeg")
+
         upload = (
             self.upload(n_file)
             if not is_newsletter
             else self.upload_newsletter(n_file, MediaType.MediaImage)
         )
+
         message = Message(
             imageMessage=ImageMessage(
                 URL=upload.url,
@@ -1762,9 +1795,10 @@ class NewClient:
                 ),
             )
         )
-        if quoted:
-            message.imageMessage.contextInfo.MergeFrom(self._make_quoted_message(quoted))
-        return message
+        
+        if quoted: message.imageMessage.contextInfo.MergeFrom(self._make_quoted_message(quoted))
+        
+        return message, upload
 
     def send_image(
         self,
@@ -1777,7 +1811,7 @@ class NewClient:
         ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
-    ) -> SendResponse:
+    ) -> tuple[SendResponse, UploadResponse]:
         """Sends an image to the specified recipient.
 
         :param to: The JID (Jabber Identifier) of the recipient.
@@ -1801,20 +1835,18 @@ class NewClient:
         :return: A function for handling the result of the image sending process.
         :rtype: SendResponse
         """
-        return self.send_message(
-            to,
-            self.build_image_message(
-                file,
-                caption,
-                quoted,
-                viewonce=viewonce,
-                ghost_mentions=ghost_mentions,
-                spoiler=spoiler,
-                mentions_are_lids=mentions_are_lids,
-                is_newsletter=to.Server == "newsletter",
-            ),
-            add_msg_secret=add_msg_secret,
+        message, response = self.build_image_message(
+            file,
+            caption,
+            quoted,
+            viewonce=viewonce,
+            ghost_mentions=ghost_mentions,
+            spoiler=spoiler,
+            mentions_are_lids=mentions_are_lids,
+            is_newsletter=to.Server == "newsletter",
         )
+        
+        return self.send_message( to, message, add_msg_secret=add_msg_secret ), response
 
     def build_album_content(
         self,
