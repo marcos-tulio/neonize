@@ -25,14 +25,13 @@ library and exposed to Python through a zero-copy FFI layer.
 
 ---
 
-## Why Neonize?
+## In this fork
 
-| | |
-|---|---|
-| **Go core performance** | The WhatsApp multidevice protocol runs in Go, called directly through ctypes. No subprocesses, no HTTP bridges. |
-| **Python native** | Fully typed, idiomatic API. Sync and async clients with identical surfaces. |
-| **Persistent sessions** | SQLite or PostgreSQL. Pair once, reconnect forever. |
-| **Enterprise ready** | Structured error hierarchy, FFmpeg diagnostics, robust FFI with retry logic. |
+| |
+|---|
+| All features by Neonize |
+| Send image messages to newsletters (by ZhanNexus) |
+| Edit newsletter image messages |
 
 ---
 
@@ -70,7 +69,7 @@ library and exposed to Python through a zero-copy FFI layer.
 ### Installation
 
 ```bash
-pip install git+https://github.com/ZhanNexus/neonize@master
+pip install git+https://github.com/marcos-tulio/neonize.git@0.6.0
 ```
 
 ### Quick Start
