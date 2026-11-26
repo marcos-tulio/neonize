@@ -729,7 +729,7 @@ func SendMessage(
 	}
 	send_extra.AdditionalNodes = GenerateWABinary(context.Background(), chatJID, &message)
 
-	fmt.Println( "SendExtra: ", send_extra )
+	//fmt.Println( "SendExtra: ", send_extra )
 
 	// fmt.Println("SendMessage: Sending message to WhatsApp")
 	sendresponse, err := client.SendMessage(

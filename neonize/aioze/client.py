@@ -2803,13 +2803,13 @@ class NewAClient:
 
     async def newsletter_edit_image_caption( 
         self, 
-        chat_id          : JID, 
-        message_id       : JID, 
-        message_original : Message, 
-        caption          : str,
-        media_handle     : str | None = None 
+        chat_id      : JID, 
+        message_id   : JID, 
+        message      : Message, 
+        caption      : str,
+        media_handle : str | None = None 
     ) -> SendResponse:
-        new_message: Message = message_original
+        new_message: Message = message
         new_message.imageMessage.caption = caption
 
         extra = None
@@ -2819,7 +2819,7 @@ class NewAClient:
             extra.MediaHandle = media_handle
 
         return await self.newsletter_edit_message(
-            to         = chat_id,
+            chat_id    = chat_id,
             message_id = message_id,
             message    = new_message,
             extra      = extra
