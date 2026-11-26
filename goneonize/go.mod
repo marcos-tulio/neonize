@@ -31,4 +31,4 @@ require (
 )
 
 
-replace go.mau.fi/whatsmeow => github.com/marcos-tulio/whatsmeow v0.0.3
+replace go.mau.fi/whatsmeow => github.com/marcos-tulio/whatsmeow v0.0.4
