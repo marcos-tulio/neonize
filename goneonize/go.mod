@@ -6,7 +6,7 @@ require (
 	github.com/lib/pq v1.12.3
 	github.com/mattn/go-sqlite3 v1.14.53
 	go.mau.fi/util v0.11.1
-	go.mau.fi/whatsmeow v0.0.0-20261125185702-10b99a98616e
+	go.mau.fi/whatsmeow v0.0.0-20261126154439-c2ce5c339ae0
 	google.golang.org/protobuf v1.36.12
 )
 
@@ -30,4 +30,4 @@ require (
 	golang.org/x/text v0.44.0 // indirect
 )
 
-replace go.mau.fi/whatsmeow => github.com/marcos-tulio/whatsmeow v0.0.4
+replace go.mau.fi/whatsmeow => github.com/marcos-tulio/whatsmeow v0.0.5
