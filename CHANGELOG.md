@@ -127,6 +127,14 @@ All notable changes to this project are documented in this file.
 
 <!-- version list -->
 
+## v0.5.4 (2026-11-26)
+
+### Bug Fixes
+
+- Include default request extras in send_message; changed send_image and build_image_message returns
+  ([`1afaade`](https://github.com/marcos-tulio/neonize/commit/1afaade659ea2531cedc97f9285b142e19ec50ca))
+
+
 ## v0.5.3 (2026-11-26)
 
 ### Bug Fixes
