@@ -13,7 +13,8 @@ on:
     - cron: "0 0 * * 1" # every Monday 00:00 UTC
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
   golang-deps:
@@ -25,6 +26,8 @@ jobs:
           go-version-file: goneonize/go.mod
           cache-dependency-path: goneonize/go.sum
       - name: Update Go dependencies
+        env:
+          GOPROXY: direct
         run: |
           cd goneonize
           go get -u ./...
@@ -36,7 +39,7 @@ jobs:
           go vet ./...
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8.1.1
-        with:
+        with: 
           base: dev
           commit-message: "build(deps): update goneonize golang dependencies"
           branch: chore/golang-deps
@@ -69,7 +72,7 @@ jobs:
           version: "34.1"
           repo-token: ${{ secrets.PAT }}
       - run: go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.12
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.4.0
       - name: Sync proto definitions from whatsmeow main
         run: |
           uv sync --dev
