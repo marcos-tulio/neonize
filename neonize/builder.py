@@ -107,7 +107,7 @@ def build_history_sync_request(message_info: neonize.MessageInfo, count: int) ->
     )
 
 
-def build_send_request_extra( extra: SendRequestExtra | None, jid: JID  ) -> SendRequestExtra:
+def build_send_request_extra( jid: JID, extra: SendRequestExtra | None = None ) -> SendRequestExtra:
     if extra != None: return extra
     
     return SendRequestExtra(

@@ -753,7 +753,7 @@ class NewAClient:
             msg.messageContextInfo.messageSecret = urandom(32)
 
         message_bytes = msg.SerializeToString()
-        extra_bytes   = build_send_request_extra( extra, to ).SerializeToString()
+        extra_bytes   = build_send_request_extra( to, extra ).SerializeToString()
 
         protobytes = await self.__client.SendMessage(
             self.uuid, 
@@ -2815,7 +2815,7 @@ class NewAClient:
         extra = None
 
         if media_handle != None:
-            extra = build_send_request_extra( jid = chat_id )
+            extra = build_send_request_extra( chat_id )
             extra.MediaHandle = media_handle
 
         return await self.newsletter_edit_message(
