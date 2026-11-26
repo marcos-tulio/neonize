@@ -4,7 +4,7 @@ import "C"
 
 //export GetVersion
 func GetVersion() *C.char {
-	version := "0.6.1"
+	version := "0.6.2"
 	return C.CString(version)
 }
 
