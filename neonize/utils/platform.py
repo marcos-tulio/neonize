@@ -15,7 +15,8 @@ def arch_normalizer(arch_: str) -> str:
     """
     arch: dict[str, str] = {
         "aarch64": "arm64",
-        "x86_64": "amd64",
+        "x86_64" : "amd64",
+        "armv7l" : "arm",
     }
     return arch.get(arch_, arch_)
 
