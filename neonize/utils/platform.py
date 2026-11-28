@@ -18,6 +18,7 @@ def arch_normalizer(arch_: str) -> str:
         "x86_64" : "amd64",
         "armv7l" : "arm",
     }
+    
     return arch.get(arch_, arch_)
 
 
